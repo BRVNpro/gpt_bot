@@ -9,7 +9,7 @@ from aiogram.types import BotCommand
 from utils.config import TELEGRAM_TOKEN
 from utils.logger import setup_logger
 
-# Импортируем все хендлеры
+# хендлеры
 from handlers import (
     start,
     random_fact,
@@ -25,13 +25,13 @@ async def main():
     # Инициализация логгера
     setup_logger()
 
-    # Создание экземпляра бота с HTML-разметкой по умолчанию
+    # Создание бота с MARKDOWN-разметкой по умолчанию
     bot = Bot(
         token=TELEGRAM_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
     )
 
-    # FSM-память в оперативке
+    # FSM-память
     dp = Dispatcher(storage=MemoryStorage())
 
     # Подключаем все роутеры
