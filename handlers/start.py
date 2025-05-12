@@ -1,10 +1,11 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
+
 from utils.prompts import load_message
 
 router = Router()
 
-# Команда /start — отображение меню
+
 @router.message(F.text == "/start")
 async def start_command(message: Message):
     text = load_message("main.txt")
@@ -22,7 +23,6 @@ async def start_command(message: Message):
     await message.answer_photo(photo=image, caption=text, reply_markup=kb)
 
 
-# Колбэк, если пользователь нажал "Закончить"
 @router.callback_query(F.data == "start")
 async def start_callback(callback: CallbackQuery):
     await start_command(callback.message)

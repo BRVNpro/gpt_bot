@@ -1,6 +1,6 @@
 import os
 
-# Простая функция для чтения текстов из файлов
+
 def load_prompt(name: str) -> str:
     path = os.path.join("prompts", name)
     if not os.path.exists(path):
@@ -8,6 +8,7 @@ def load_prompt(name: str) -> str:
 
     with open(path, "r", encoding="utf-8") as f:
         return f.read().strip()
+
 
 def load_message(name: str) -> str:
     path = os.path.join("messages", name)

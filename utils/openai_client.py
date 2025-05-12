@@ -1,7 +1,9 @@
 import openai
+
 from utils.config import OPENAI_TOKEN
 
 openai.api_key = OPENAI_TOKEN
+
 
 async def ask_chatgpt(prompt: str, model: str = "gpt-3.5-turbo") -> str:
     try:

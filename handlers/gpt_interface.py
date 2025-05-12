@@ -1,14 +1,15 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message, CallbackQuery, FSInputFile
 
+from utils.chatgpt_instance import gpt
 from utils.prompts import load_prompt
-from utils.chatgpt_instance import gpt  # ✅ новый импорт
 
 router = Router()
 
 DEFAULT_GPT_PROMPT = load_prompt("gpt.txt")
+
 
 class GPTState(StatesGroup):
     waiting_for_question = State()

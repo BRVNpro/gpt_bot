@@ -1,14 +1,12 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
-from utils.chatgpt_instance import gpt  # ✅
-from utils.prompts import load_prompt
+from utils.chatgpt_instance import gpt
 
 router = Router()
 
-# Список языков
 LANGUAGES = {
     "en": "Английский",
     "fr": "Французский",
@@ -16,7 +14,7 @@ LANGUAGES = {
     "es": "Испанский",
 }
 
-# Состояния
+
 class TranslatorStates(StatesGroup):
     choosing_language = State()
     translating = State()

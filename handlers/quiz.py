@@ -1,20 +1,19 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
+
 from states.quiz_states import QuizStates
-from utils.prompts import load_prompt
 from utils.chatgpt_instance import gpt
+from utils.prompts import load_prompt
 
 router = Router()
 
-# Темы и их человекочитаемые названия
 TOPICS = {
     "quiz_prog": "Программирование",
     "quiz_math": "Математика",
     "quiz_biology": "Биология"
 }
 
-# Загружаем системный промпт из файла
 BASE_PROMPT = load_prompt("quiz.txt")
 
 
@@ -44,13 +43,11 @@ async def select_topic(callback: CallbackQuery, state: FSMContext):
 async def ask_question(message: Message, state: FSMContext, topic_code: str):
     await state.set_state(QuizStates.waiting_for_answer)
 
-    # для quiz_more достаём предыдущую тему
     if topic_code == "quiz_more":
         data = await state.get_data()
         topic_code = data.get("last_topic", "quiz_prog")
 
     try:
-        # GPT: системный промпт — BASE_PROMPT, сообщение — "quiz_prog" и т.п.
         question = await gpt.send_question(BASE_PROMPT, topic_code)
         await state.update_data(current_question=question)
         await message.answer(f"❓ Вопрос:\n{question}")
@@ -66,7 +63,6 @@ async def process_answer(message: Message, state: FSMContext):
     topic = data.get("topic", "quiz_prog")
 
     try:
-        # ✅ GPT получает system=BASE_PROMPT и user=твой ответ + вопрос
         result = await gpt.send_question(
             prompt_text=BASE_PROMPT,
             message_text=f"Вопрос: {question}\nОтвет: {user_answer}"

@@ -1,14 +1,13 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 
 from states.talk_states import TalkStates
+from utils.chatgpt_instance import gpt
 from utils.prompts import load_prompt
-from utils.chatgpt_instance import gpt  # ✅ новая интеграция
 
 router = Router()
 
-# Список доступных персонажей
 CHARACTERS = {
     "cobain": ("Курт Кобейн 🎸", "talk_cobain.txt", "talk_cobain.jpg"),
     "queen": ("Елизавета II 👑", "talk_queen.txt", "talk_queen.jpg"),
@@ -47,7 +46,7 @@ async def select_character(callback: CallbackQuery, state: FSMContext):
     char_name, prompt_file, image_file = char_info
     prompt_text = load_prompt(prompt_file)
 
-    gpt.set_prompt(prompt_text)  # ✅ Устанавливаем промпт
+    gpt.set_prompt(prompt_text)
     await state.set_state(TalkStates.chatting)
 
     image = FSInputFile(f"images/{image_file}")
@@ -63,7 +62,7 @@ async def select_character(callback: CallbackQuery, state: FSMContext):
 @router.message(TalkStates.chatting)
 async def talk_chat(message: Message, state: FSMContext):
     try:
-        response = await gpt.add_message(message.text)  # ✅ Продолжаем диалог
+        response = await gpt.add_message(message.text)
         await message.answer(response)
     except Exception as e:
         await message.answer(f"⚠️ Ошибка диалога: {e}")
