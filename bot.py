@@ -1,15 +1,11 @@
 import asyncio
 
 from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
 
-from utils.config import TELEGRAM_TOKEN
-from utils.logger import setup_logger
-
-# хендлеры
 from handlers import (
     start,
     random_fact,
@@ -18,23 +14,21 @@ from handlers import (
     quiz,
     translator,
     recommendations,
-    help as help_handler
 )
+from utils.config import TELEGRAM_TOKEN
+from utils.logger import setup_logger
+
 
 async def main():
-    # Инициализация логгера
     setup_logger()
 
-    # Создание бота с MARKDOWN-разметкой по умолчанию
     bot = Bot(
         token=TELEGRAM_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
     )
 
-    # FSM-память
     dp = Dispatcher(storage=MemoryStorage())
 
-    # Подключаем все роутеры
     dp.include_routers(
         start.router,
         random_fact.router,
@@ -43,17 +37,14 @@ async def main():
         quiz.router,
         translator.router,
         recommendations.router,
-        help_handler.router,
     )
 
-    # Настройка списка команд для /menu
     await bot.set_my_commands([
         BotCommand(command="start", description="Запуск"),
         BotCommand(command="random", description="Рандомный факт"),
         BotCommand(command="gpt", description="Свободный вопрос к ChatGPT"),
         BotCommand(command="talk", description="Поговорить с личностью"),
         BotCommand(command="quiz", description="Квиз по теме"),
-        BotCommand(command="help", description="Справка по боту"),
         BotCommand(command="translate", description="Переводчик"),
         BotCommand(command="recommend", description="Рекомендации"),
     ])
@@ -62,6 +53,5 @@ async def main():
     await dp.start_polling(bot)
 
 
-# Точка входа
 if __name__ == "__main__":
     asyncio.run(main())
